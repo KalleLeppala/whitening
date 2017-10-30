@@ -33,7 +33,9 @@ def whiten(G, autostop = True, tol = 0.00001, iterations = 100):
             G = math.sqrt(m/n)*G # Scaling the whole thing so that it's the rows and not the columns that can have unit (Euclidean) length.
     a = (1 - math.sqrt(1/(n + 1)))/n # A little trick to make the row means zero.
     L = numpy.identity(n) - a*numpy.ones((n, n))
-    G = numpy.diag(D)*G*L
+    G = G*L
+    for i in range(m): # Multiplying the rows of G by the elements of D, using numpy.diag(D)*G is rather heavy.
+        G[i] = D[i]*G[i]
     G = numpy.hstack([G, - numpy.sum(G, axis = 1)])
     return(G)
 
